@@ -3,6 +3,14 @@ val ScalatraVersion = "2.7.1"
 ThisBuild / scalaVersion := "2.13.4"
 ThisBuild / organization := "com.learn"
 
+val circeVersion = "0.12.3"
+
+libraryDependencies ++= Seq(
+  "io.circe" %% "circe-core",
+  "io.circe" %% "circe-generic",
+  "io.circe" %% "circe-parser"
+).map(_ % circeVersion)
+
 lazy val hello = (project in file("."))
   .settings(
     name := "scalatra-gladiator",
