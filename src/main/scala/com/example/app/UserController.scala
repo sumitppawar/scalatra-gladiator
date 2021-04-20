@@ -1,7 +1,13 @@
 package com.example.app
 
-import com.example.app.User.toString
 import org.scalatra._
+
+import java.util.Date
+import io.circe.{Error, _}
+import io.circe.generic.auto._
+import io.circe.parser._
+import io.circe.syntax._
+
 
 class UserController extends ScalatraServlet {
 
@@ -21,9 +27,19 @@ class UserController extends ScalatraServlet {
     Ok(User.toString(u))
   }
 
-  get("/userx/:id") {
-    val u: User = User("Shrinivas", "Deshmukh", params("id").toInt)
+  get("/customuser") {
+    val x: CustomUser = CustomUser("Shrinivas", "Deshmukh", new Date())
 
-    Ok(u.toStringX)
+    Ok(x.asJson.noSpaces, headers=Map("Content-Type" -> "application/json"))
   }
+
+  post("/customuser") {
+
+    decode[CustomUser](request.body) match {
+      case Left(a) => BadRequest(s"Invalid definition, error encountered ${a}")
+      case Right(b) => Ok(b.asJson.noSpaces)
+    }
+
+  }
+
 }
