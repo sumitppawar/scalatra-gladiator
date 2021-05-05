@@ -12,6 +12,8 @@ case class CustomUser(firstName: String, lastName: String, dob: Date)
 
 object CustomUser {
 
+  val x  = List(1,2,3)
+
   implicit val encodeUserCustom: Encoder[CustomUser] = new Encoder[CustomUser] {
     override def apply(a: CustomUser): Json = Json.obj(
       ("firstName", Json.fromString(a.firstName)),

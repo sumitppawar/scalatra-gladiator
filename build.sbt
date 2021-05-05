@@ -11,6 +11,13 @@ libraryDependencies ++= Seq(
   "io.circe" %% "circe-parser"
 ).map(_ % circeVersion)
 
+libraryDependencies ++= Seq(
+  "com.typesafe.slick" %% "slick" % "3.3.3",
+  "org.slf4j" % "slf4j-nop" % "1.6.4",
+  "com.typesafe.slick" %% "slick-hikaricp" % "3.3.3",
+  "com.typesafe" % "config" % "1.4.1"
+)
+
 lazy val hello = (project in file("."))
   .settings(
     name := "scalatra-gladiator",
