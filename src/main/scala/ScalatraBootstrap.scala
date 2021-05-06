@@ -4,6 +4,7 @@ import org.scalatra._
 import javax.servlet.ServletContext
 import org.slf4j.{Logger, LoggerFactory}
 import slick.jdbc.H2Profile.api._
+import com.example.models.Models.setup
 
 class ScalatraBootstrap extends LifeCycle {
 
@@ -12,6 +13,8 @@ class ScalatraBootstrap extends LifeCycle {
   override def init(context: ServletContext) {
     val db = Database.forConfig("h2mem1", ConfigFactory.load("application"))
     context.mount(new UserController, "/*")
+
+    val setupFuture = db.run(setup)
   }
 
   override def destroy(context: ServletContext): Unit = super.destroy(context)

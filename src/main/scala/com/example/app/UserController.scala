@@ -1,10 +1,8 @@
 package com.example.app
 
 import org.scalatra._
-
 import java.util.Date
-import io.circe.{Error, _}
-import io.circe.generic.auto._
+import scala.io.Source
 import io.circe.parser._
 import io.circe.syntax._
 
@@ -22,7 +20,7 @@ class UserController extends ScalatraServlet {
   }
 
   get("/user/:id") {
-    val u: User = User("Sumit", "Pawar", params("id").toInt)
+    val u: User = User("Sumit", "Pawar", params("id").toInt, "2021-01-01")
 
     Ok(User.toString(u))
   }
