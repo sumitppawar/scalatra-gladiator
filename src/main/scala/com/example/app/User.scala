@@ -2,9 +2,9 @@ package com.example.app
 
 import io.circe._, io.circe.generic.auto._, io.circe.parser._, io.circe.syntax._
 
-case class User(firstName: String, lastName: String, id: Integer, dob: String)
+case class User(firstName: String, lastName: String, id: Int, dob: String)
 
-object User {
+object UserImplicits {
 
   def toString(in: User): String = in.asJson.noSpaces
 
@@ -29,8 +29,14 @@ object User {
       }
   }
 
-  def tupled: (String, String, Int, String) => User = _ match {
-    case (x1, x2, x3, x4) => User.apply(x1, x2, Integer.valueOf(x3), x4)
+  // Refer: https://edward-huang.com/scala/tech/soft-development/etl/circe/2019/11/28/6-quick-tips-to-parse-json-with-circe/
+  implicit val decodeListUser: Decoder[List[User]] = new Decoder[List[User]] {
+    final def apply(c: HCursor): Decoder.Result[List[User]] = {
+      for {
+        user <- c.downField("user").as[User]
+
+      } yield List(user)
+    }
   }
 
 }

@@ -13,17 +13,18 @@ object Models {
     def id: Rep[Int] = column[Int]("ID")
     def dob: Rep[String] = column[String]("DOB")
 
-    // override def * = (firstName, lastName, id, dob) <> (User.tupled, User.unapply)
+    def * = (firstName, lastName, id, dob) <> (User.tupled, User.unapply)
+
   }
 
   val initialUserDataset = Source.fromResource("UsersDataset.csv").getLines().map(_.split(",")).
-    map(x => User(x(0), x(1), Integer.parseInt(x(2)), x(3))).toList
+    map(x => User(x(0).trim(), x(1).trim(), x(2).trim().toInt, x(3).trim())).toList
 
   def users: TableQuery[Users] = TableQuery[Users]
 
   val setup = DBIO.seq(
     users.schema.create,
-    users ++= initialUserDataset
+    users ++=initialUserDataset
   )
 
 }

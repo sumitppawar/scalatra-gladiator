@@ -5,9 +5,14 @@ import java.util.Date
 import scala.io.Source
 import io.circe.parser._
 import io.circe.syntax._
+import com.example.repositories.UserRepositoryImpl
+import slick.jdbc.H2Profile.api._
+import UserImplicits.{toString => userToString, _}
 
 
-class UserController extends ScalatraServlet {
+class UserController(db: Database) extends ScalatraServlet with FutureSupport {
+
+  protected implicit def executor = scala.concurrent.ExecutionContext.Implicits.global
 
   get("/userx/1") {
     val json =
@@ -22,7 +27,17 @@ class UserController extends ScalatraServlet {
   get("/user/:id") {
     val u: User = User("Sumit", "Pawar", params("id").toInt, "2021-01-01")
 
-    Ok(User.toString(u))
+    Ok(userToString(u))
+  }
+
+  get("/getallusers") {
+    val u = new UserRepositoryImpl(db)
+    Ok(u.all)
+  }
+
+  get("/gerruserbyid/:id") {
+    val u = new UserRepositoryImpl(db)
+    Ok(u.getById(params("id").toInt))
   }
 
   get("/customuser") {

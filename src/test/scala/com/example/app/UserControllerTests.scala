@@ -21,4 +21,11 @@ class UserControllerTests extends ScalatraFunSuite {
     }
   }
 
+  test("GET /getallusers on UserController should return a valid Body") {
+    get("/getallusers") {
+      println(body)
+      status should equal(responseCodeOk)
+    }
+  }
+
 }

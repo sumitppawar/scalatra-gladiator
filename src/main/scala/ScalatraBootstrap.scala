@@ -12,7 +12,7 @@ class ScalatraBootstrap extends LifeCycle {
 
   override def init(context: ServletContext) {
     val db = Database.forConfig("h2mem1", ConfigFactory.load("application"))
-    context.mount(new UserController, "/*")
+    context.mount(new UserController(db), "/*")
 
     val setupFuture = db.run(setup)
   }
