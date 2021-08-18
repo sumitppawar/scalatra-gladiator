@@ -6,7 +6,7 @@ import scala.io.Source
 
 object Models {
 
-  class Users(tag: Tag) extends Table[User](tag, "User")
+  class Users(tag: Tag) extends Table[User](tag, "Users")
   {
     def firstName: Rep[String] = column[String]("FIRST_NAME")
     def lastName: Rep[String] = column[String]("LAST_NAME")

@@ -33,10 +33,19 @@ object UserImplicits {
   implicit val decodeListUser: Decoder[List[User]] = new Decoder[List[User]] {
     final def apply(c: HCursor): Decoder.Result[List[User]] = {
       for {
-        user <- c.downField("user").as[User]
-
+        user <- c.downArray.as[User]
       } yield List(user)
     }
+  }
+
+  // TODO: Ask about how this could/should be implemented
+  implicit val encodeListUsers: Encoder[List[User]] = new Encoder[List[User]] {
+    final def apply(a: List[User]): Json = Json.obj(
+      ("firstName", Json.fromString(a.firstName)),
+      ("lastName", Json.fromString(a.lastName)),
+      ("id", Json.fromInt(a.id)),
+      ("dob", Json.fromString(a.dob))
+    )
   }
 
 }
