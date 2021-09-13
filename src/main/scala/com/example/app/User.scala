@@ -29,24 +29,7 @@ object UserImplicits {
       }
   }
 
-  // Refer: https://edward-huang.com/scala/tech/soft-development/etl/circe/2019/11/28/6-quick-tips-to-parse-json-with-circe/
-  implicit val decodeListUser: Decoder[List[User]] = new Decoder[List[User]] {
-    final def apply(c: HCursor): Decoder.Result[List[User]] = {
-      for {
-        user <- c.downArray.as[User]
-      } yield List(user)
-    }
-  }
-
-  // TODO: Ask about how this could/should be implemented
-  implicit val encodeListUsers: Encoder[List[User]] = new Encoder[List[User]] {
-    final def apply(a: List[User]): Json = Json.obj(
-      ("firstName", Json.fromString(a.firstName)),
-      ("lastName", Json.fromString(a.lastName)),
-      ("id", Json.fromInt(a.id)),
-      ("dob", Json.fromString(a.dob))
-    )
-  }
+  
 
 }
 

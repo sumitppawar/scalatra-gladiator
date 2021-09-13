@@ -22,7 +22,7 @@ class ScalatraBootstrap extends LifeCycle {
       val setupFuture = db.run(setup)
       Await.result(setupFuture, 2 minutes)
 
-      context.mount(new UserController(db), "/*")
+      context.mount(new UserController(db, logger), "/*")
     } catch {
       case e: Throwable => {
         logger.error(e.toString)

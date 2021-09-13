@@ -11,5 +11,5 @@ class UserRepositoryImpl(db: Database) extends UserRepository {
   def save(newCustomUser: User): Unit = ???
   def update(updatedCustomUser: User): Unit = ???
   def getByLastName(nameOfInterest: String): Future[Seq[User]] = db.run(users.filter(_.lastName === nameOfInterest).result)
-  def getById(id: Int): Future[Seq[User]] = db.run(users.filter(_.id === id).result)
+  def getById(id: Int): Future[Option[User]] = db.run(users.filter(_.id === id).result.headOption)
 }
