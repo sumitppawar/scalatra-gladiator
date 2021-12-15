@@ -1,10 +1,11 @@
-import com.example.app._
 import com.typesafe.config.ConfigFactory
+import com.example.app._
 import org.scalatra._
 import javax.servlet.ServletContext
 import org.slf4j.{Logger, LoggerFactory}
-import slick.jdbc.H2Profile.api._
-import com.example.models.Models.setup
+import slick.basic.DatabaseConfig
+import slick.jdbc.JdbcProfile
+import com.example.models.Models
 import scala.util._
 import scala.concurrent._
 import scala.concurrent.duration._
@@ -17,12 +18,18 @@ class ScalatraBootstrap extends LifeCycle {
   override def init(context: ServletContext) {
 
     try {
-      val db = Database.forConfig("h2mem1", ConfigFactory.load("application"))
+      val dbConf = DatabaseConfig.forConfig[JdbcProfile]("devdb") // Load the DB Configuration 
+      import dbConf.profile.api._
 
-      val setupFuture = db.run(setup)
+      val db = Database.forConfig("devdb", ConfigFactory.load("application"))
+      val models = new Models(dbConf)
+      val setupFuture = db.run(models.setup)
+      val dbProfile = "devdb"
+      
       Await.result(setupFuture, 2 minutes)
 
-      context.mount(new UserController(db, logger), "/*")
+      context.mount(new UserController(dbConf, logger, dbProfile, models), "/*")
+
     } catch {
       case e: Throwable => {
         logger.error(e.toString)

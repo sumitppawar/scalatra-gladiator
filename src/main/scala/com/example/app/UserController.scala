@@ -5,18 +5,27 @@ import java.util.Date
 import scala.util._
 import io.circe._, io.circe.generic.auto._, io.circe.parser._, io.circe.syntax._
 import com.example.repositories.UserRepositoryImpl
-import slick.jdbc.H2Profile.api._
 import UserImplicits.{toString => userToString, _}
 import scala.concurrent._
 import scala.concurrent.duration._
 import scala.language.postfixOps
 import org.slf4j.{Logger}
+import slick.basic.DatabaseConfig
+import slick.jdbc.JdbcProfile
+import com.typesafe.config.ConfigFactory
+import com.example.models.Models
 
 
-class UserController(db: Database, logger: Logger) extends ScalatraServlet with FutureSupport {
+class UserController(protected val dbConf: DatabaseConfig[JdbcProfile], 
+                      logger: Logger, 
+                      dbProfile: String, 
+                      models: Models) extends ScalatraServlet with FutureSupport {
+
+  import dbConf.profile.api._ // Import the JdbcProfile API from the configured profile
 
   protected implicit def executor = scala.concurrent.ExecutionContext.Implicits.global
-  val u = new UserRepositoryImpl(db)
+
+  val u = new UserRepositoryImpl(dbConf, dbProfile, models)
 
   get("/userx/1") {
     val json =

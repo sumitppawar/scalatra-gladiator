@@ -3,8 +3,9 @@ package com.example.app
 import com.typesafe.config.ConfigFactory
 import org.scalatra.test.scalatest._
 import org.scalatra._
-import com.example.models.Models.setup
-import slick.jdbc.H2Profile.api._
+import com.example.models.Models
+import slick.basic.DatabaseConfig
+import slick.jdbc.JdbcProfile
 import scala.concurrent._
 import scala.concurrent.duration._
 import scala.language.postfixOps
@@ -14,13 +15,17 @@ import org.slf4j.{Logger, LoggerFactory}
 
 class UserControllerTests extends ScalatraFunSuite {
 
+  val dbConf = DatabaseConfig.forConfig[JdbcProfile]("h2mem1") // Load the DB Configuration 
+  import dbConf.profile.api._
+
   val db = Database.forConfig("h2mem1", ConfigFactory.load("application"))
-  Await.result(db.run(setup), 2 minutes)
+  val models = new Models(dbConf)
+  Await.result(db.run(models.unitTestSetup), 2 minutes)
 
   val logger: Logger = LoggerFactory.getLogger(getClass)
 
   addServlet(
-    new UserController(db, logger),
+    new UserController(dbConf, logger, "h2mem1", models),
     "/*"
   )
 
