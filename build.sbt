@@ -1,6 +1,6 @@
 val ScalatraVersion = "2.7.1"
 
-ThisBuild / scalaVersion := "2.13.4"
+ThisBuild / scalaVersion := "2.13.6"
 ThisBuild / organization := "com.learn"
 
 val circeVersion = "0.12.3"
@@ -19,7 +19,7 @@ libraryDependencies ++= Seq(
   "com.typesafe" % "config" % "1.4.1"
 )
 
-lazy val hello = (project in file("."))
+lazy val restserver = (project in file("."))
   .settings(
     name := "scalatra-gladiator",
     version := "0.1.0-SNAPSHOT",

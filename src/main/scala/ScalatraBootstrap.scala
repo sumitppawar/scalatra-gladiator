@@ -18,13 +18,13 @@ class ScalatraBootstrap extends LifeCycle {
   override def init(context: ServletContext) {
 
     try {
-      val dbConf = DatabaseConfig.forConfig[JdbcProfile]("devdb") // Load the DB Configuration 
+      val dbConf = DatabaseConfig.forConfig[JdbcProfile]("devdb") // Load the DB Configuration
       import dbConf.profile.api._
 
-      val db = Database.forConfig("devdb", ConfigFactory.load("application"))
+      val dbProfile: String = "devdb"
+      val db = Database.forConfig(dbProfile, ConfigFactory.load("application"))
       val models = new Models(dbConf)
       val setupFuture = db.run(models.setup)
-      val dbProfile = "devdb"
       
       Await.result(setupFuture, 2 minutes)
 

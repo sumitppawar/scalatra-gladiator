@@ -16,9 +16,9 @@ import com.typesafe.config.ConfigFactory
 import com.example.models.Models
 
 
-class UserController(protected val dbConf: DatabaseConfig[JdbcProfile], 
-                      logger: Logger, 
-                      dbProfile: String, 
+class UserController(protected val dbConf: DatabaseConfig[JdbcProfile],
+                      logger: Logger,
+                      dbProfile: String,
                       models: Models) extends ScalatraServlet with FutureSupport {
 
   import dbConf.profile.api._ // Import the JdbcProfile API from the configured profile
@@ -51,7 +51,7 @@ class UserController(protected val dbConf: DatabaseConfig[JdbcProfile],
 
   get("/getallusers") {
     Ok(
-      Await.result(u.all, 5 minutes).asJson, 
+      Await.result(u.all, 5 minutes).asJson,
       headers=Map("Content-Type" -> "application/json")
     )
   }
@@ -71,21 +71,6 @@ class UserController(protected val dbConf: DatabaseConfig[JdbcProfile],
       case Seq() => BadRequest(s"Users with the last name specified do not exists")
       case Seq(_*) => Ok(res.asJson)
     }
-  }
-
-  get("/customuser") {
-    val x: CustomUser = CustomUser("Shrinivas", "Deshmukh", new Date())
-
-    Ok(x.asJson.noSpaces, headers=Map("Content-Type" -> "application/json"))
-  }
-
-  post("/customuser") {
-
-    decode[CustomUser](request.body) match {
-      case Left(a) => BadRequest(s"Invalid definition, error encountered ${a}")
-      case Right(b) => Ok(b.asJson.noSpaces)
-    }
-
   }
 
 }
